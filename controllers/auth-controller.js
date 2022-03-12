@@ -1,7 +1,44 @@
 const korisnici=require('../database/tabela-korisnici');
 const bcrypt = require('bcrypt');
 var crypto = require("crypto");
+const { isGeneratorFunction } = require('util/types');
 var saltRounds = 10;
+
+
+async function checkToken(req,res,next){
+  try{
+    console.log(req.headers.authorization);
+    const t=(req.headers.authorization.split(" "))[1];
+    console.log(t);
+    var ok = await korisnici.selectToken(t);
+    if(!ok){
+      res.status(403).json({success: false, message:"Neispravan token"});
+      return;
+    }
+    req.token = t;
+    next();
+  }catch(err){
+    console.error(err);
+    res.status(403).json({success: false, message:"Neispravan token"});
+  }
+}
+
+async function logout(req,res){
+  try{
+    console.log(req.headers.authorization);
+    const t=(req.headers.authorization.split(" "))[1];
+    console.log(t);
+    var ok = await korisnici.deleteToken(t);
+    if(!ok){
+      res.status(403).json({success: false, message:"Neispravan token"});
+      return;
+    }
+    res.status(200).json({success: true, message:"Uspesno ste se izlogovali"})
+  }catch(err){
+    console.error(err);
+    res.status(403).json({success: false, message:"Neispravan token"});
+  }
+}
 
 async function prikazi(req, res) {
   try{
@@ -46,6 +83,7 @@ async function signUp(req,res){
 async function logIn(req,res){
 
   try{
+    req.body.username = req.body.email;
     const k = await korisnici.selectUsername(req.body.username);
     if(k==undefined)
       return res.status(403).json({success: false, message:'Pogrešno korisničko ime'});
@@ -53,8 +91,9 @@ async function logIn(req,res){
     const match = await bcrypt.compare(req.body.password, k.password);
     if(!match)
       return res.status(403).json({success: false, message:'Pogrešna lozinka'});
-
-    res.status(200).json({success: true, token: k.token});
+    var token = crypto.randomBytes(50).toString('hex');
+    const k2 = korisnici.insertToken(req.body.username,token)
+    res.status(200).json({success: true, token: token});
   } catch(err){
     console.error(err);
     if(err.message=='Korisnik sa unetim imenom već postoji')
@@ -69,5 +108,7 @@ module.exports = {
   prikazi,
   prikaziJedan,
   signUp,
-  logIn
+  logIn,
+  checkToken,
+  logout
 };
