@@ -7,7 +7,7 @@ const akcije={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("SELECT akcije.*, username as autor from "+tabela+" JOIN korisnici USING(id_korisnika) WHERE vreme > NOW()");
+      const res = await conn.query("SELECT akcije.*, naziv_kategorije, username as autor from "+tabela+" JOIN korisnici USING(id_korisnika) JOIN kategorije USING(id_kategorije) WHERE DATEDIFF(NOW(),vreme)<=0");
       //console.log(res); 
       conn.end();
       return res;

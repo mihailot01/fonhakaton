@@ -80,6 +80,25 @@ const akcije_korisnici={
       throw err;
     }
   },
+  dodajPoene: async function(id_korisnika){
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query("SELECT poeni FROM korisnici WHERE id_korisnika = ?", [id_korisnika]);
+      const res2 = await conn.query("UPDATE korisnici SET poeni=? WHERE id_korisnika = ?", [res[0].poeni+5, id_korisnika]);
+      // console.log(res);
+      if(res2.affectedRows==0){
+        conn.end();
+        return false;
+      }
+      conn.end();
+      return true;
+    } catch (err) {
+      conn.end();
+      console.log(err);
+      throw err;
+    }
+  },
   prijavljen: async function(id_akcije, id_korisnika){
     let conn;
     try {

@@ -43,6 +43,7 @@ async function verifikujPrisustvo(req,res){
       res.status(403).json({success: false, message:"Nije uspelo verifikovanje"});
       return;
     }
+    const ok2 = await akcije_korisnici.dodajPoene(id_korisnika);
     res.status(200).json({ success: true, message: 'ok'});
   } catch(err){
     console.log(err);
