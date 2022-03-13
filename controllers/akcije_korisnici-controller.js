@@ -36,6 +36,7 @@ async function odustaniOdAkcije(req,res){
 
 async function verifikujPrisustvo(req,res){
   try{
+    // console.log(req)
     id_korisnika = await korisnici.selectIdByToken(req.token); 
     const ok = await akcije_korisnici.verifikuj(req.body.qrToken);
     if(!ok){

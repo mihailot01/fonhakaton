@@ -16,6 +16,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mariadb": "^3.0.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "move-file": "^1.2.0",
+    "multiparty": "^4.2.3"
   }
 }

@@ -11,6 +11,8 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth')
 var actionsRouter = require('./routes/akcije')
 var categoriesRouter = require('./routes/kategorije')
+var filepondRouter = require('./routes/pictures');
+const exp = require('constants');
 
 var app = express();
 
@@ -25,11 +27,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/slike",express.static(path.join(__dirname, 'routes/slike')));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/actions', actionsRouter);
 app.use('/categories', categoriesRouter);
+app.use('/filepond', filepondRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

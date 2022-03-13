@@ -67,6 +67,7 @@ const akcije_korisnici={
     try {
       conn = await pool.getConnection();
       const res = await conn.query("UPDATE "+tabela+" SET verifikovan=1 WHERE qr_token = ?", [qrToken]);
+      // console.log(res);
       if(res.affectedRows==0){
         conn.end();
         return false;

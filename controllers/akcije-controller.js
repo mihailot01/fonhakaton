@@ -10,7 +10,7 @@ async function novaAkcija(req,res){
 
   try{
     id_korisnika = await korisnici.selectIdByToken(req.token); 
-    const ok = await akcije.insert(req.body.name, req.body.time, req.body.lat, req.body.lng, req.body.address, req.body.description, req.body.numPeople, id_korisnika, req.body.id_kategorije);
+    const ok = await akcije.insert(req.body.name, req.body.time, req.body.lat, req.body.lng, req.body.address, req.body.description, req.body.numPeople, id_korisnika, req.body.id_kategorije, req.body.slika);
     if(!ok){
       res.status(403).json({success: false, message:"Nije uspelo čuvanje akcije"});
       return;
