@@ -92,6 +92,18 @@ const akcije_korisnici={
       throw err;
     }
   },
+  selectQrToken: async function(id_akcije, id_korisnika){
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query("SELECT qr_token from "+tabela+" WHERE id_akcije = ? AND id_korisnika = ?",[id_akcije,id_korisnika]);
+      conn.end();
+      return res[0].qr_token;
+    } catch (err) {
+        conn.end();
+      throw err;
+    }
+  },
 }
 
 module.exports=akcije_korisnici;

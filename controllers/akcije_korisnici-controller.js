@@ -39,7 +39,7 @@ async function verifikujPrisustvo(req,res){
     id_korisnika = await korisnici.selectIdByToken(req.token); 
     const ok = await akcije_korisnici.verifikuj(req.body.qrToken);
     if(!ok){
-      res.status(403).json({success: false, message:"Nije uspelo verifikovanje prisustva"});
+      res.status(403).json({success: false, message:"Nije uspelo verifikovanje"});
       return;
     }
     res.status(200).json({ success: true, message: 'ok'});
@@ -49,9 +49,20 @@ async function verifikujPrisustvo(req,res){
   }
 }
 
+async function prikaziQrToken(req,res){
+  try{
+    k = await korisnici.selectIdByToken(req.token); 
+    token = await akcije_korisnici.selectQrToken(req.body.actionId,k);
+    res.status(200).json({ "qr_token": token});
+  } catch(err){
+    console.log(err);
+      res.status(500).json(err);
+  }
+}
 
 module.exports = {
   novaAkcijaKorisnik,
   odustaniOdAkcije,
-  verifikujPrisustvo
+  verifikujPrisustvo,
+  prikaziQrToken
 };
