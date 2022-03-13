@@ -103,6 +103,18 @@ async function logIn(req,res){
   }
 }
 
+async function brPoena(req,res){
+  try{
+    var id = await korisnici.selectIdByToken(req.token);
+    var k = await korisnici.selectID(id);
+    console.log(k);
+    res.status(200).json({ poeni: k.poeni})
+  }catch(err){
+    console.error(err);
+    res.status(403).json({success: false, message:"Neispravan token"});
+  }
+}
+
 
 module.exports = {
   prikazi,
@@ -110,5 +122,6 @@ module.exports = {
   signUp,
   logIn,
   checkToken,
-  logout
+  logout,
+  brPoena
 };

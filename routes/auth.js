@@ -5,7 +5,8 @@ const {
   signUp,
   logIn,
   checkToken,
-  logout
+  logout,
+  brPoena
 }=require('../controllers/auth-controller');
 
 /* GET users listing. */
@@ -15,5 +16,6 @@ router.post('/check-token', checkToken, (req,res)=>{
         res.status(200).json({ success: true, message: 'ok'});}
     );
 router.post('/logout', logout);
+router.get('/points', checkToken, brPoena);
 
 module.exports = router;

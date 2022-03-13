@@ -23,7 +23,7 @@ const korisnici={
       const res = await conn.query("SELECT * from "+tabela+" where id_korisnika=?", [id]);
       //console.log(res); 
       conn.end();
-      return res;
+      return res[0];
     } catch (err) {
         conn.end();
       throw err;
