@@ -124,6 +124,18 @@ const akcije_korisnici={
       throw err;
     }
   },
+  selectIdQr: async function(qr_token){
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query("SELECT id_korisnika from "+tabela+" WHERE qr_token = ?",[qr_token]);
+      conn.end();
+      return res[0].id_korisnika;
+    } catch (err) {
+        conn.end();
+      throw err;
+    }
+  },
 }
 
 module.exports=akcije_korisnici;

@@ -38,12 +38,13 @@ async function verifikujPrisustvo(req,res){
   try{
     // console.log(req)
     id_korisnika = await korisnici.selectIdByToken(req.token); 
+    const id_korisnika2 = await akcije_korisnici.selectIdQr(req.body.qrToken);
     const ok = await akcije_korisnici.verifikuj(req.body.qrToken);
     if(!ok){
       res.status(403).json({success: false, message:"Nije uspelo verifikovanje"});
       return;
     }
-    const ok2 = await akcije_korisnici.dodajPoene(id_korisnika);
+    const ok2 = await akcije_korisnici.dodajPoene(id_korisnika2);
     res.status(200).json({ success: true, message: 'ok'});
   } catch(err){
     console.log(err);
