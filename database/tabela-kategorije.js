@@ -9,7 +9,6 @@ const kategorije={
       conn = await pool.getConnection();
       const res = await conn.query("SELECT * from "+tabela);
       conn.end();
-      console.log(res);
       return res;
     } catch (err) {
         conn.end();

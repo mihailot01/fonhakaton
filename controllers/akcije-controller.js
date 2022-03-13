@@ -22,7 +22,18 @@ async function novaAkcija(req,res){
 }
 
 
+async function prikaziAkcije(req,res){
+
+  try{
+    const a = await akcije.select();
+    res.status(200).json(a);
+  } catch(err){
+    console.log(err);
+      res.status(500).json(err);
+  }
+}
 
 module.exports = {
-  novaAkcija
+  novaAkcija,
+  prikaziAkcije
 };

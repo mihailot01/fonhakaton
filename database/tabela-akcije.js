@@ -7,7 +7,7 @@ const akcije={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("SELECT * from "+tabela);
+      const res = await conn.query("SELECT * from "+tabela+" vreme>GETDATE()");
       //console.log(res); 
       conn.end();
       return res;
@@ -20,7 +20,7 @@ const akcije={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("INSERT INTO "+tabela+" (naziv, vreme, latitude, longitude, opis, broj_ljudi, id_korisnika, id_kategorije) VALUES (?,?,?,?,?,?,?,?)", [naziv, vreme, latitude, longitude, opis, brojLjudi, id_korisnika, id_kategorije]);
+      const res = await conn.query("INSERT INTO "+tabela+" (naziv, vreme, latitude, longitude, opis, broj_ljudi, id_korisnika, id_kategorije) VALUES (?,?,?,?,?,?,?,?)", [naziv, new Date(vreme), latitude, longitude, opis, brojLjudi, id_korisnika, id_kategorije]);
       if(res.affectedRows==0){
         conn.end();
         return false;
