@@ -45,7 +45,7 @@ const korisnici={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("SELECT COUNT(*) as cnt from "+tabela+" where token=?", [token]);
+      const res = await conn.query("SELECT COUNT(*) as cnt FROM aktivne_sesije WHERE token=?", [token]);
       conn.end();
       return (res[0].cnt>0);
     } catch (err) {
@@ -57,7 +57,7 @@ const korisnici={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("SELECT id_korisnika from "+tabela+" where token=?", [token]);
+      const res = await conn.query("SELECT id_korisnika FROM aktivne_sesije WHERE token=?", [token]);
       conn.end();
       return (res[0].id_korisnika);
     } catch (err) {
@@ -69,7 +69,7 @@ const korisnici={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("UPDATE "+tabela+" SET token = NULL where token=?", [token]);
+      const res = await conn.query("DELETE FROM aktivne_sesije WHERE token=?", [token]);
       conn.end();
     //   console.log(res);
       return res.affectedRows>0;
@@ -78,7 +78,7 @@ const korisnici={
       throw err;
     }
   },
-  insert: async function(username,password,token){
+  insert: async function(username,password){
     let conn;
     try {
       conn = await pool.getConnection();
@@ -88,7 +88,7 @@ const korisnici={
         conn.end();
         throw new Error('Korisnik sa unetim imenom već postoji');
       }
-      const res = await conn.query("INSERT INTO "+tabela+" (username,password,token) VALUES (?,?,?)", [username,password,token]);
+      const res = await conn.query("INSERT INTO "+tabela+" (username,password) VALUES (?,?)", [username,password]);
       //console.log(res); 
       if(res.affectedRows==0){
         conn.end();
@@ -102,11 +102,11 @@ const korisnici={
       throw err;
     }
   },
-  insertToken: async function(username,token){
+  insertToken: async function(id_korisnika,token){
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("UPDATE "+tabela+" SET token = ? WHERE username = ?", [token,username]);
+      const res = await conn.query("INSERT INTO aktivne_sesije (id_korisnika,token) VALUES (?,?)", [id_korisnika,token]);
       if(res.affectedRows==0){
         conn.end();
         throw new Error('Nije uspelo upisivanje u bazu');

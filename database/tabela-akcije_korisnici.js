@@ -20,7 +20,7 @@ const akcije_korisnici={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("INSERT INTO "+tabela+" (id_akcije, id_korisnika, token) VALUES (?,?,?)", [id_akcije, id_korisnika, token]);
+      const res = await conn.query("INSERT INTO "+tabela+" (id_akcije, id_korisnika, qr_token) VALUES (?,?,?)", [id_akcije, id_korisnika, token]);
       if(res.affectedRows==0){
         conn.end();
         return false;
@@ -28,6 +28,8 @@ const akcije_korisnici={
       conn.end();
       return true;
     } catch (err) {
+
+      console.log(err);
       conn.end();
       throw err;
     }
@@ -47,7 +49,49 @@ const akcije_korisnici={
       conn.end();
       throw err;
     }
-  }
+  },
+  brojKorisnika: async function(id_akcije) {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query("SELECT COUNT(*) as cnt from "+tabela+" WHERE id_akcije=?", [id_akcije]);
+      conn.end();
+      return parseInt(res[0].cnt);
+    } catch (err) {
+        conn.end();
+      throw err;
+    }
+  },
+  verifikuj: async function(qrToken){
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query("UPDATE "+tabela+" SET verifikovan=1 WHERE qr_token = ?", [qrToken]);
+      if(res.affectedRows==0){
+        conn.end();
+        return false;
+      }
+      conn.end();
+      return true;
+    } catch (err) {
+      conn.end();
+      console.log(err);
+      throw err;
+    }
+  },
+  prijavljen: async function(id_akcije, id_korisnika){
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query("SELECT COUNT(*) as cnt from "+tabela+" WHERE id_akcije = ? AND id_korisnika = ?",[id_akcije,id_korisnika]);
+      //console.log(res); 
+      conn.end();
+      return res[0].cnt>0;
+    } catch (err) {
+        conn.end();
+      throw err;
+    }
+  },
 }
 
 module.exports=akcije_korisnici;

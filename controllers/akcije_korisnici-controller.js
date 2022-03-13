@@ -34,8 +34,24 @@ async function odustaniOdAkcije(req,res){
   }
 }
 
+async function verifikujPrisustvo(req,res){
+  try{
+    id_korisnika = await korisnici.selectIdByToken(req.token); 
+    const ok = await akcije_korisnici.verifikuj(req.body.qrToken);
+    if(!ok){
+      res.status(403).json({success: false, message:"Nije uspelo verifikovanje prisustva"});
+      return;
+    }
+    res.status(200).json({ success: true, message: 'ok'});
+  } catch(err){
+    console.log(err);
+      res.status(500).json(err);
+  }
+}
+
 
 module.exports = {
   novaAkcijaKorisnik,
-  odustaniOdAkcije
+  odustaniOdAkcije,
+  verifikujPrisustvo
 };

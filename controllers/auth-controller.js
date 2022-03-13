@@ -92,7 +92,7 @@ async function logIn(req,res){
     if(!match)
       return res.status(403).json({success: false, message:'Pogrešna lozinka'});
     var token = crypto.randomBytes(50).toString('hex');
-    const k2 = korisnici.insertToken(req.body.username,token)
+    const k2 = korisnici.insertToken(k.id_korisnika,token)
     res.status(200).json({success: true, token: token});
   } catch(err){
     console.error(err);

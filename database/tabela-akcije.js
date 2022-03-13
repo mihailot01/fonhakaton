@@ -7,7 +7,7 @@ const akcije={
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("SELECT * from "+tabela+" vreme>GETDATE()");
+      const res = await conn.query("SELECT akcije.*, username as autor from "+tabela+" JOIN korisnici USING(id_korisnika) WHERE vreme > NOW()");
       //console.log(res); 
       conn.end();
       return res;
@@ -16,11 +16,11 @@ const akcije={
       throw err;
     }
   },
-  insert: async function(naziv, vreme, latitude, longitude, opis, brojLjudi, id_korisnika, id_kategorije){
+  insert: async function(naziv, vreme, latitude, longitude, adresa, opis, brojLjudi, id_korisnika, id_kategorije){
     let conn;
     try {
       conn = await pool.getConnection();
-      const res = await conn.query("INSERT INTO "+tabela+" (naziv, vreme, latitude, longitude, opis, broj_ljudi, id_korisnika, id_kategorije) VALUES (?,?,?,?,?,?,?,?)", [naziv, new Date(vreme), latitude, longitude, opis, brojLjudi, id_korisnika, id_kategorije]);
+      const res = await conn.query("INSERT INTO "+tabela+" (naziv, vreme, latitude, longitude, adresa, opis, broj_ljudi, id_korisnika, id_kategorije) VALUES (?,?,?,?,?,?,?,?,?)", [naziv, new Date(vreme), latitude, longitude, adresa, opis, brojLjudi, id_korisnika, id_kategorije]);
       if(res.affectedRows==0){
         conn.end();
         return false;
@@ -28,6 +28,8 @@ const akcije={
       conn.end();
       return true;
     } catch (err) {
+
+      console.log(err);
       conn.end();
       throw err;
     }
